@@ -15,7 +15,7 @@ class BaseModel(models.Model):
 
 
 class Advertisement(models.Model):
-    image = models.ImageField(upload_to='common/advertisement')
+    image = models.ImageField(upload_to='media/common/advertisement')
     link = models.URLField()
 
     def __str__(self):
@@ -43,7 +43,7 @@ class ContactUs(BaseModel):
 class AboutUs(BaseModel):
     title = models.CharField(max_length=120)
     description = models.TextField()
-    video = models.FileField(upload_to='common/aboutus/')
+    video = models.FileField(upload_to='common/about-us/')
 
     def __str__(self):
         return self.title
