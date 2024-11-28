@@ -146,26 +146,13 @@ JAZZMIN_SETTINGS = {
     "site_logo_classes": "img-circle",
     "site_icon": None,
     "welcome_sign": "Welcome to the OnePc",
-    "copyright": "Acme Library Ltd",
-    "search_model": ["auth.User", "auth.Group"],
+    "copyright": "Acme OnePc Ltd",
+    "search_model": ["auth.User", "product.Product", 'product.ProductCategory', 'product.ProductBrand'],
     "user_avatar": None,
     "show_sidebar": True,
     "navigation_expanded": True,
     "hide_apps": [],
     "hide_models": [],
-    "custom_links": {
-        "books": [{
-            "name": "Make Messages",
-            "url": "make_messages",
-            "icon": "fas fa-comments",
-            "permissions": ["books.view_book"]
-        }]
-    },
-    "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "auth.Group": "fas fa-users",
-    },
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
     "related_modal_active": False,
@@ -174,10 +161,42 @@ JAZZMIN_SETTINGS = {
     "use_google_fonts_cdn": True,
     "show_ui_builder": False,
     "changeform_format": "horizontal_tabs",
-    "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},
+    "changeform_format_overrides": {"auth.user": "collapsible", "product.product": "collapsible", "product.popularproduct": 'collapsible', 'common.aboutus': 'collapsible'},
     "language_chooser": True,
+    "theme": "cerulean",  # Mavzuni o'zgartirish (bootstrap 4 mavzulari)
+    "dark_mode_theme": "cyborg",  # Qorong'u mavzu
 }
-
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-navy",
+    "accent": "accent-navy",
+    "navbar": "navbar-navy navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": False,
+    "sidebar": "sidebar-dark-navy",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "default",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
 LANGUAGES = (
     ('en', 'English'),
     ('uz', 'Uzbek'),
@@ -195,7 +214,6 @@ SWAGGER_SETTINGS = {
             'description': 'JWT Authorization header using the Bearer scheme. Example: "Authorization: Bearer {token}"',
         }
     },
-    # 'USE_SESSION_AUTH': True,
 }
 
 REST_FRAMEWORK = {
