@@ -18,16 +18,16 @@ class ProductTranslation(TranslationOptions):
     fields = ['name',]
 
 
-@register(models.ProductInfo)
-class ProductInfoTranslation(TranslationOptions):
-    fields = ['name']
-
-
-@register(models.ProductTecInfo)
-class ProductTecInfoTranslation(TranslationOptions):
-    fields = ['info_name', 'info_text',]
-
-
 @register(models.PopularProduct)
 class PopularProductTranslation(TranslationOptions):
     fields = ['title', 'name', 'description']
+
+
+@register(models.Region)
+class RegionTranslation(TranslationOptions):
+    fields = ['name']
+
+
+@register(models.City)
+class CityTranslation(TranslationOptions):
+    fields = ['name']

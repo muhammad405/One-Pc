@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework',
     'corsheaders',
+    'django_filters',
     # local apps
     'common',
     'product',
@@ -123,11 +124,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+BASE_URL = env('BASE_URL')
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
 
-MEDIA_URL = 'media/'
+MEDIA_URL = f'/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
@@ -161,7 +163,7 @@ JAZZMIN_SETTINGS = {
     "use_google_fonts_cdn": True,
     "show_ui_builder": False,
     "changeform_format": "horizontal_tabs",
-    "changeform_format_overrides": {"auth.user": "collapsible", "product.product": "collapsible", "product.popularproduct": 'collapsible', 'common.aboutus': 'collapsible'},
+    "changeform_format_overrides": {"auth.user": "collapsible", "product.product": "collapsible", "product.popularproduct": 'collapsible', 'common.aboutus': 'collapsible', 'product.orderproduct':'collapsible'},
     "language_chooser": True,
     "theme": "cerulean",  # Mavzuni o'zgartirish (bootstrap 4 mavzulari)
     "dark_mode_theme": "cyborg",  # Qorong'u mavzu
@@ -171,7 +173,7 @@ JAZZMIN_UI_TWEAKS = {
     "footer_small_text": False,
     "body_small_text": False,
     "brand_small_text": False,
-    "brand_colour": "navbar-navy",
+    "brand_colour": "navbar-danger",
     "accent": "accent-navy",
     "navbar": "navbar-navy navbar-dark",
     "no_navbar_border": False,
@@ -189,8 +191,8 @@ JAZZMIN_UI_TWEAKS = {
     "theme": "default",
     "dark_mode_theme": None,
     "button_classes": {
-        "primary": "btn-primary",
-        "secondary": "btn-secondary",
+        "primary": "btn-outline-primary",
+        "secondary": "btn-outline-secondary",
         "info": "btn-info",
         "warning": "btn-warning",
         "danger": "btn-danger",
@@ -234,3 +236,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:5173',  # Your frontend address
 ]
+
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 365
+SESSION_SAVE_EVERY_REQUEST = True

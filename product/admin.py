@@ -1,54 +1,39 @@
 from django.contrib import admin
-from django.utils.safestring import mark_safe
 from modeltranslation.admin import TranslationAdmin, TranslationStackedInline
 
-from product import models
-
-
-class ProductInfoInline(TranslationStackedInline):
-    model = models.ProductInfo
-    fields = ['name']
-    extra = 0
-
-
-class ProductTecInfoInline(TranslationStackedInline):
-    model = models.ProductTecInfo
-    fields = ['link', 'info_name', 'info_text']
-    readonly_fields = ['link']
-    extra = 0
-
-    def link(self, instance):
-        url = f"/admin/course/club/{instance.id}/change/"
-        return mark_safe(f'<a href="{url}">Kirish</a>')
+from product import models, forms
 
 
 class ProductMediasInline(admin.StackedInline):
     model = models.ProductMedia
     extra = 0
-    fields = ['image', 'video']
+    fields = ['media']
 
 
-class ProductColorInline(admin.StackedInline):
-    model = models.ProductColor
+class TecInfoNameAdmin(admin.StackedInline):
+    model = models.TecInfoName
     extra = 0
-    fields = ['rgba_name',]
+    fields = ['name']
 
 
-@admin.register(models.ProductTecInfo)
-class ProductTecInfoAdmin(TranslationAdmin):
-    inlines = [ProductInfoInline]
+class CityInline(TranslationStackedInline):
+    model = models.City
+    extra = 0
+    fields = ['name']
 
-    def has_module_permission(self, request):
-        return False
+
+@admin.register(models.TechnicalInformation)
+class TecInfoAdmin(admin.ModelAdmin):
+    inlines = [TecInfoNameAdmin]
 
 
 @admin.register(models.Product)
 class ProductAdmin(TranslationAdmin):
     fieldsets = (
-        ('Product Info', {"fields": ("category", "brand", 'price', 'discount_percentage', 'is_top', 'is_discount', 'is_popular')}),
+        ('Product Info', {"fields": ("main_image", 'info', 'colors', "category", "brand", 'price', 'discount_percentage', 'is_top', 'is_discount', 'is_popular')}),
         ("Product Name", {"fields": ("name_uz", "name_ru", "name_en")}),
     )
-    inlines = [ProductTecInfoInline, ProductMediasInline, ProductColorInline]
+    inlines = [ProductMediasInline]
 
 
 @admin.register(models.ProductCategory)
@@ -78,3 +63,47 @@ class PopularProductAdmin(TranslationAdmin):
     )
     list_display = ['name', 'title']
     list_display_links = list_display
+
+
+@admin.register(models.ProductTecInfo)
+class ProductTecInfoAdmin(admin.ModelAdmin):
+    form = forms.ProductTecInfoForm
+
+
+@admin.register(models.ProductColor)
+class ProductColorAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(models.OrderProduct)
+class OrderProductAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('User info', {"fields": ('first_name', 'last_name', 'phone_number', 'user')}),
+        ("Location", {"fields": ("region", "city", "address", 'floor')}),
+        ("Order info", {"fields": ("products", "product_count", "total_price", 'comment')}),
+        ("Status", {"fields": ("status", "method_for_reception")}),
+    )
+    # readonly_fields = [
+    #     'region', 'city', 'address', 'floor', 'products', 'product_count', 'total_price',
+    #     'comment', 'first_name', 'last_name', 'phone_number', 'user',
+    # ]
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
+        return False
+
+
+@admin.register(models.AnonymousUser)
+class AnonymousUserAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(models.Region)
+class RegionAdmin(TranslationAdmin):
+    inlines = [CityInline]
