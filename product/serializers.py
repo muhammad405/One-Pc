@@ -149,7 +149,20 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         return ProductTecInfoSerializer(product_tec_info, many=True).data
 
 
+class OrderProductItemSerializer(serializers.Serializer):
+    product_id = serializers.PrimaryKeyRelatedField(queryset=models.Product.objects.all())
+    count = serializers.IntegerField(min_value=1)
+
+    def validate(self, attrs):
+        product = attrs.get("product_id")
+        if not product:
+            raise serializers.ValidationError({"product_id": "Mahsulot topilmadi."})
+        return attrs
+
+
 class OrderCreateSerializer(serializers.ModelSerializer):
+    products = OrderProductItemSerializer(many=True)
+
     class Meta:
         model = models.OrderProduct
         fields = [
@@ -166,7 +179,9 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         city = models.City.objects.filter(id=validated_data['city'].id).first()
         if city is None:
             raise serializers.ValidationError({"message": "city is not found"})
-        product_count = len(validated_data['products'])
+        products_data = validated_data.pop('products')
+
+        product_count = len(products_data)
         order = models.OrderProduct.objects.create(
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
@@ -182,8 +197,12 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             status=models.NEW_ORDER,
             product_count=product_count,
         )
-        order.products.set(validated_data['products'])
-        order.save()
+        for product_data in products_data:
+            models.OrderProductItem.objects.create(
+                order=order,
+                product=product_data['product_id'],
+                count=product_data['count']
+            )
 
         return {
             "message": 'Order successfully created'

@@ -179,6 +179,19 @@ class AnonymousUser(BaseModel):
         verbose_name_plural = _('anonim users')
 
 
+class OrderProductItem(models.Model):
+    order = models.ForeignKey('OrderProduct', on_delete=models.CASCADE, related_name="order_items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="order_items")
+    count = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f'{self.product} - {self.count}'
+
+    class Meta:
+        verbose_name = _("order product item")
+        verbose_name_plural = _("order product items")
+
+
 class OrderProduct(BaseModel):
     METHOD = (
         (DELIVERY, DELIVERY),
@@ -200,7 +213,7 @@ class OrderProduct(BaseModel):
     floor = models.CharField(max_length=250)
     phone_number = models.CharField(max_length=15,validators=[RegexValidator(regex=r"^(?:\+998|998)?[0-9]{9}$",message="Telefon raqami noto'g'ri formatda. To'g'ri format +998901234567 bo'lishi kerak.",code='invalid_phone_number')])
     comment = models.TextField(null=True, blank=True)
-    products = models.ManyToManyField(Product, related_name='order_products')
+    products = models.ManyToManyField(Product, related_name='order_products', through=OrderProductItem)
     product_count = models.PositiveIntegerField(default=0)
     total_price = models.PositiveBigIntegerField(default=0)
     user = models.ForeignKey(AnonymousUser, on_delete=models.CASCADE, related_name='order_products')

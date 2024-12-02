@@ -22,6 +22,21 @@ class CityInline(TranslationStackedInline):
     fields = ['name']
 
 
+class OrderItemInline(admin.StackedInline):
+    model = models.OrderProductItem
+    extra = 0
+    fields = ['product', 'count']
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request, obj):
+        return False
+
+
 @admin.register(models.TechnicalInformation)
 class TecInfoAdmin(admin.ModelAdmin):
     inlines = [TecInfoNameAdmin]
@@ -80,9 +95,11 @@ class OrderProductAdmin(admin.ModelAdmin):
     fieldsets = (
         ('User info', {"fields": ('first_name', 'last_name', 'phone_number', 'user')}),
         ("Location", {"fields": ("region", "city", "address", 'floor')}),
-        ("Order info", {"fields": ("products", "product_count", "total_price", 'comment')}),
+        ("Order info", {"fields": ("product_count", "total_price", 'comment')}),
         ("Status", {"fields": ("status", "method_for_reception")}),
     )
+    filter_horizontal = ('products',)
+    inlines = [OrderItemInline]
     # readonly_fields = [
     #     'region', 'city', 'address', 'floor', 'products', 'product_count', 'total_price',
     #     'comment', 'first_name', 'last_name', 'phone_number', 'user',
@@ -92,7 +109,7 @@ class OrderProductAdmin(admin.ModelAdmin):
         return False
 
     def has_add_permission(self, request):
-        return False
+        return True
 
 
 @admin.register(models.AnonymousUser)
