@@ -3,7 +3,7 @@ from rest_framework import serializers, views, status, generics
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
-from product import models, serializers, filters, utils
+from product import models, serializers, filters, utils, paganation
 
 
 class ProductCategoryListApiView(views.APIView):
@@ -73,6 +73,7 @@ class ProductLByCategoryListApiView(generics.ListAPIView):
     serializer_class = serializers.ProductListSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.ProductFilter
+    pagination_class = paganation.CustomPagination
 
     def get_queryset(self):
         category_id = self.kwargs.get('category_id')
