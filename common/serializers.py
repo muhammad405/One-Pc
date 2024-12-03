@@ -10,8 +10,6 @@ class ContactUsSerializer(serializers.ModelSerializer):
 
 
 class AboutUsSerializer(serializers.ModelSerializer):
-    video = serializers.SerializerMethodField(method_name='get_video')
-
     class Meta:
         model = models.AboutUs
         fields = [
@@ -20,8 +18,6 @@ class AboutUsSerializer(serializers.ModelSerializer):
 
 
 class AdvertisingSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField(method_name='get_image')
-
     class Meta:
         model = models.Advertisement
         fields = ['id', 'image', 'link']
