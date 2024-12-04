@@ -168,17 +168,6 @@ class City(BaseModel):
         verbose_name_plural = _('cities')
 
 
-class AnonymousUser(BaseModel):
-    session = models.CharField(max_length=250)
-
-    def __str__(self):
-        return f"Anonim User {self.session}"
-
-    class Meta:
-        verbose_name = _('anonim user')
-        verbose_name_plural = _('anonim users')
-
-
 class OrderProductItem(models.Model):
     order = models.ForeignKey('OrderProduct', on_delete=models.CASCADE, related_name="order_items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="order_items")
@@ -216,7 +205,6 @@ class OrderProduct(BaseModel):
     products = models.ManyToManyField(Product, related_name='order_products', through=OrderProductItem)
     product_count = models.PositiveIntegerField(default=0)
     total_price = models.PositiveBigIntegerField(default=0)
-    user = models.ForeignKey(AnonymousUser, on_delete=models.CASCADE, related_name='order_products')
 
     def __str__(self):
         return f"{self.first_name} - order"

@@ -9,15 +9,7 @@ class ProductCategoryListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductCategory
         fields = [
-            'id', 'name_uz', 'name_ru', 'name_en',
-        ]
-
-
-class PopularProductCategoryListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.ProductCategory
-        fields = [
-            'id', 'name_uz', 'name_ru', 'name_en', 'icon'
+            'id', 'name_uz', 'name_ru', 'name_en', 'icon', 'is_top', 'is_popular'
         ]
 
 
@@ -172,7 +164,6 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        user = models.AnonymousUser.objects.filter(session=self.context['session_id']).first()
         region = models.Region.objects.filter(id=validated_data['region'].id).first()
         if region is None:
             raise serializers.ValidationError({"message": "region is not found"})
@@ -180,8 +171,8 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         if city is None:
             raise serializers.ValidationError({"message": "city is not found"})
         products_data = validated_data.pop('products')
-
         product_count = len(products_data)
+
         order = models.OrderProduct.objects.create(
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
@@ -193,7 +184,6 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             phone_number=validated_data['phone_number'],
             comment=validated_data['comment'],
             total_price=validated_data['total_price'],
-            user=user,
             status=models.NEW_ORDER,
             product_count=product_count,
         )
@@ -208,21 +198,6 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             "message": 'Order successfully created'
         }
 
-
-class OrderHistorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.OrderProduct
-        fields = [
-            'id', 'status', 'created_at', 'product_count', 'total_price',
-        ]
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        created_at = representation['created_at']
-        if isinstance(created_at, str):
-            created_at = datetime.fromisoformat(created_at)
-        representation['created_at'] = created_at.strftime('%Y-%m-%d %H:%M:%S')
-        return representation
 
 
 class CompareProductSerializer(serializers.Serializer):

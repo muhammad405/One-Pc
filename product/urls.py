@@ -10,7 +10,6 @@ urlpatterns = [
     path('product-color/list/', views.ProductColorListSerializer.as_view(), name='product-color-list'),
     # product category
     path('category/list/', views.ProductCategoryListApiView.as_view(), name='product-category-list'),
-    path('category/popular/list/', views.PopularProductCategoryListApiView.as_view(), name='product-category-popular-list'),
     path('category/<int:category_id>/', views.ProductLByCategoryListApiView.as_view(),name='product-by-category-list'),
     path('category/info/<int:category_id>/', views.CategoryInfoApiView.as_view(), name='category-infos'),
     # discounted product
@@ -24,7 +23,6 @@ urlpatterns = [
     path('product/similar-products/<int:product_id>/', views.SimilarProductListApiView.as_view(), name='product-detail'),
     # product order
     path('order/create/', views.OrderCreateApiView.as_view(), name='order-create'),
-    path('order/history/', views.OrderHistoryApiView.as_view(), name='order-history'),
     path('get-methods/', views.GetOrderMethodForReceptionApiView.as_view(), name='get-methods'),
     # compare products
     path('compare/', views.CompareProductApiView.as_view(), name='compare-products'),

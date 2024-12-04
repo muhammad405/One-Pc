@@ -3,7 +3,7 @@ from rest_framework import serializers, views, status, generics
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
-from product import models, serializers, filters, utils, paganation
+from product import models, serializers, filters, paganation
 
 
 class ProductCategoryListApiView(views.APIView):
@@ -24,13 +24,6 @@ class ProductColorListSerializer(views.APIView):
     def get(self, request):
         colors = models.ProductColor.objects.all()
         serializer = serializers.ProductColorSerializer(colors, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class PopularProductCategoryListApiView(views.APIView):
-    def get(self, request):
-        queryset = models.ProductCategory.objects.filter(is_popular=True)
-        serializer = serializers.PopularProductCategoryListSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

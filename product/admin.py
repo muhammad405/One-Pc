@@ -112,15 +112,6 @@ class OrderProductAdmin(admin.ModelAdmin):
         return True
 
 
-@admin.register(models.AnonymousUser)
-class AnonymousUserAdmin(admin.ModelAdmin):
-    def has_add_permission(self, request):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
-
-
 @admin.register(models.Region)
 class RegionAdmin(TranslationAdmin):
     inlines = [CityInline]
