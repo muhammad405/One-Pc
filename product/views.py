@@ -70,7 +70,7 @@ class ProductLByCategoryListApiView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         category_id = self.kwargs.get('category_id')
-        return models.ProductCategory.objects.filter(id=category_id)
+        return models.Product.objects.filter(category__id=category_id)
 
 
 class ProductDetailApiView(views.APIView):
