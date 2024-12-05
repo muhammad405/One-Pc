@@ -62,7 +62,7 @@ class PopularProductApiView(views.APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ProductLByCategoryListApiView(generics.ListAPIView):
+class ProductLByCategoryListApiView(generics.RetrieveAPIView):
     serializer_class = serializers.ProductListSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.ProductFilter
@@ -70,7 +70,7 @@ class ProductLByCategoryListApiView(generics.ListAPIView):
 
     def get_queryset(self):
         category_id = self.kwargs.get('category_id')
-        return models.Product.objects.filter(category__id=category_id).distinct()
+        return models.ProductCategory.objects.filter(id=category_id)
 
 
 class ProductDetailApiView(views.APIView):
