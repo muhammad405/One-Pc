@@ -62,7 +62,7 @@ class PopularProductApiView(views.APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ProductLByCategoryListApiView(generics.RetrieveAPIView):
+class ProductLByCategoryListApiView(generics.ListAPIView):
     serializer_class = serializers.ProductListSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.ProductFilter
