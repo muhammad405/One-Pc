@@ -82,13 +82,18 @@ class ProductTecInfoSerializer(serializers.ModelSerializer):
 class ProductListSerializer(serializers.ModelSerializer):
     discount_price = serializers.SerializerMethodField(method_name='get_discount_price')
     colors = serializers.SerializerMethodField(method_name='get_colors')
+    tec_info = serializers.SerializerMethodField(method_name='get_product_tec_infos')
 
     class Meta:
         model = models.Product
         fields = [
             'id', 'name_uz', 'name_ru', 'name_en', 'price', 'main_image', 'discount_percentage', 'is_discount',
-            'discount_price', 'colors',
+            'discount_price', 'colors', 'tec_info'
         ]
+
+    def get_product_tec_infos(self, obj):
+        infos = models.ProductTecInfo.objects.filter(products__id=obj.id)
+        return ProductTecInfoSerializer(infos, many=True).data
 
     def get_colors(self, obj):
         colors = obj.colors
@@ -199,13 +204,28 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         }
 
 
-
 class CompareProductSerializer(serializers.Serializer):
     product_ids = serializers.ListSerializer(
-        child=serializers.IntegerField(), required=True, min_length=2, max_length=2
+        child=serializers.IntegerField(), required=True
     )
 
-    def validate_product_ids(self, value):
-        if len(value) != 2:
-            raise serializers.ValidationError("Iltimos, faqat ikki mahsulotni tanlang.")
-        return value
+    # def validate_product_ids(self, value):
+    #     if len(value) != 2:
+    #         raise serializers.ValidationError("Iltimos, faqat ikki mahsulotni tanlang.")
+    #     return value
+
+
+class SearchSerializer(serializers.Serializer):
+    search = serializers.CharField(required=False, max_length=250)
+
+
+class ProductSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Product
+        fields = ['name_uz', 'name_ru', 'name_en']
+
+
+class CategorySearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ProductCategory
+        fields = ['name_uz', 'name_ru', 'name_en']

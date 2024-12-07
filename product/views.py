@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import serializers, views, status, generics
 from rest_framework.parsers import JSONParser
@@ -103,24 +104,13 @@ class SimilarProductListApiView(views.APIView):
 
 class OrderCreateApiView(generics.GenericAPIView):
     serializer_class = serializers.OrderCreateSerializer
-    # queryset = models.OrderProduct.objects.all()
     parser_classes = [JSONParser]
 
     def post(self, request):
-        session_id = utils.set_user_session(request)
-        serializer = serializers.OrderCreateSerializer(data=request.data, context={'session_id': session_id})
+        serializer = serializers.OrderCreateSerializer(data=request.data)
         if serializer.is_valid():
             return Response(serializer.save(), status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class OrderHistoryApiView(views.APIView):
-    def get(self, request):
-        session_id = utils.set_user_session(request)
-        user = models.AnonymousUser.objects.get(session=session_id)
-        orders = models.OrderProduct.objects.filter(user=user)
-        serializer = serializers.OrderHistorySerializer(orders, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class GetOrderMethodForReceptionApiView(views.APIView):
@@ -140,23 +130,33 @@ class CompareProductApiView(generics.GenericAPIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         product_ids = serializer.validated_data['product_ids']
-        if len(product_ids) != 2:
-            return Response({"error": "Tanlangan mahsulotlar topilmadi."}, status=404)
-
         products = models.Product.objects.filter(id__in=product_ids)
-        if len(products) != 2:
-            return Response({"error": "Tanlangan mahsulotlar topilmadi."}, status=404)
-        product_1_infos = products.first().info.all()
-        product_2_infos = products.last().info.all()
+        for product in products:
+            product_info = product.info.all()
+            product_1_info_serializer = serializers.ProductTecInfoSerializer(product_info, many=True).data
         serializer = serializers.ProductListSerializer(products, many=True)
-        product_1_info_serializer = serializers.ProductTecInfoSerializer(product_1_infos, many=True).data
-        product_2_info_serializer = serializers.ProductTecInfoSerializer(product_2_infos, many=True).data
         product_data = serializer.data
         comparison_result = {
-            "product_1": product_data[0],
-            "product_2": product_data[1],
-            'product_1_infos': product_1_info_serializer,
-            'product_2_infos': product_2_info_serializer,
+            "products": product_data,
         }
 
         return Response(comparison_result)
+
+
+class SearchApiView(generics.GenericAPIView):
+    serializer_class = serializers.SearchSerializer
+
+    def post(self, request):
+        serializer = serializers.SearchSerializer(data=request.data)
+        serializer.is_valid()
+        query =serializer.validated_data.get('search', '')
+        products = models.Product.objects.filter(Q(name_uz__icontains=query) | Q(name_ru__icontains=query) | Q(name_en__icontains=query))
+        categories = models.ProductCategory.objects.filter(Q(name_uz__icontains=query) | Q(name_ru__icontains=query) | Q(name_en__icontains=query))
+        return Response({
+            'products': serializers.ProductSearchSerializer(products, many=True).data,
+            'categories': serializers.CategorySearchSerializer(categories, many=True).data,
+        })
+
+
+
+

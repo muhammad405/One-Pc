@@ -4,6 +4,7 @@ from product import views
 
 
 urlpatterns = [
+    path('search/', views.SearchApiView.as_view(), name='search'),
     # product brand
     path('product-brand/list/', views.ProductBrandListApiView.as_view(), name='product-brand-list'),
     # product color
