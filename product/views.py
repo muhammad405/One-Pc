@@ -131,17 +131,12 @@ class CompareProductApiView(generics.GenericAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         product_ids = serializer.validated_data['product_ids']
         products = models.Product.objects.filter(id__in=product_ids)
-        for product in products:
-            product_info = product.info.all()
-            product_1_info_serializer = serializers.ProductTecInfoSerializer(product_info, many=True).data
-        serializer = serializers.ProductListSerializer(products, many=True)
-        product_data = serializer.data
-        comparison_result = {
-            "products": product_data,
-        }
-
-        return Response(comparison_result)
-
+        categories = products.values_list('category', flat=True).distinct()
+        if categories.count() == 1:
+            serializer = serializers.CompareProductListSerializer(products, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'Products category is not  same'})
 
 class SearchApiView(generics.GenericAPIView):
     serializer_class = serializers.SearchSerializer
