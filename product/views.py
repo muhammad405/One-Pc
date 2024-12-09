@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Min, Max
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import serializers, views, status, generics
 from rest_framework.parsers import JSONParser
@@ -87,7 +87,6 @@ class ProductDetailApiView(views.APIView):
 class CategoryInfoApiView(views.APIView):
     def get(self, request, category_id):
         data = models.TechnicalInformation.objects.filter(category__id=category_id)
-        print(data)
         serializer = serializers.TecInfoSerializer(data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -138,6 +137,7 @@ class CompareProductApiView(generics.GenericAPIView):
         else:
             return Response({'message': 'Products category is not  same'})
 
+
 class SearchApiView(generics.GenericAPIView):
     serializer_class = serializers.SearchSerializer
 
@@ -153,5 +153,17 @@ class SearchApiView(generics.GenericAPIView):
         })
 
 
-
+class GetMinAndMaxPriceApiView(views.APIView):
+    def get(self, request, category_id):
+        max_price = models.Product.objects.filter(category__id=category_id).aggregate(
+            max_price=Max('price')
+        )['max_price']
+        min_price = models.Product.objects.filter(category__id=category_id).aggregate(
+            min_price=Min('price')
+        )['min_price']
+        data = {
+            'min_price': min_price,
+            'max_price': max_price
+        }
+        return Response(data)
 

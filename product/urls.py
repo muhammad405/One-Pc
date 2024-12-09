@@ -13,6 +13,7 @@ urlpatterns = [
     path('category/list/', views.ProductCategoryListApiView.as_view(), name='product-category-list'),
     path('category/<int:category_id>/', views.ProductLByCategoryListApiView.as_view(),name='product-by-category-list'),
     path('category/info/<int:category_id>/', views.CategoryInfoApiView.as_view(), name='category-infos'),
+    path('category/get_max_min_price/<category_id>/', views.GetMinAndMaxPriceApiView.as_view(), name='get_max_and_min_price'),
     # discounted product
     path('discounted-product/list/', views.DiscountedProductListApiView.as_view(), name='discounted-product'),
     path('most-popular-product/list/', views.PopularProductListApiView.as_view(), name='most-popular-product-list'),
