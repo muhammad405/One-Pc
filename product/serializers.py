@@ -81,18 +81,13 @@ class ProductTecInfoSerializer(serializers.ModelSerializer):
 
 class ProductListSerializer(serializers.ModelSerializer):
     discount_price = serializers.SerializerMethodField(method_name='get_discount_price')
-    colors = serializers.SerializerMethodField(method_name='get_colors')
 
     class Meta:
         model = models.Product
         fields = [
             'id', 'name_uz', 'name_ru', 'name_en', 'price', 'main_image', 'discount_percentage', 'is_discount',
-            'discount_price', 'colors',
+            'discount_price',
         ]
-
-    def get_colors(self, obj):
-        colors = obj.colors
-        return ProductColorSerializer(colors, many=True).data
 
     def get_discount_price(self, obj):
         discount_price = 0
@@ -209,16 +204,10 @@ class SearchSerializer(serializers.Serializer):
     search = serializers.CharField(required=False, max_length=250)
 
 
-class ProductSearchSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Product
-        fields = ['name_uz', 'name_ru', 'name_en']
-
-
 class CategorySearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductCategory
-        fields = ['name_uz', 'name_ru', 'name_en']
+        fields = ['id', 'name_uz', 'name_ru', 'name_en']
 
 
 class CompareProductListSerializer(serializers.ModelSerializer):

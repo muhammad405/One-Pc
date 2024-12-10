@@ -148,7 +148,7 @@ class SearchApiView(generics.GenericAPIView):
         products = models.Product.objects.filter(Q(name_uz__icontains=query) | Q(name_ru__icontains=query) | Q(name_en__icontains=query))
         categories = models.ProductCategory.objects.filter(Q(name_uz__icontains=query) | Q(name_ru__icontains=query) | Q(name_en__icontains=query))
         return Response({
-            'products': serializers.ProductSearchSerializer(products, many=True).data,
+            'products': serializers.ProductListSerializer(products, many=True).data,
             'categories': serializers.CategorySearchSerializer(categories, many=True).data,
         })
 
