@@ -24,7 +24,7 @@ class ProductBrandListSerializer(serializers.ModelSerializer):
 class DiscountedProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DiscountProduct
-        fields = ['id', 'image']
+        fields = ['id', 'image', 'product']
 
 
 class PopularProductListSerializer(serializers.ModelSerializer):
@@ -32,7 +32,7 @@ class PopularProductListSerializer(serializers.ModelSerializer):
         model = models.PopularProduct
         fields = [
             'id', 'title_uz', 'title_ru', 'title_en', 'name_uz', 'name_ru', 'name_en',
-            'description_uz', 'description_ru', 'description_en', 'banner',
+            'description_uz', 'description_ru', 'description_en', 'banner', 'product',
         ]
 
 

@@ -65,13 +65,13 @@ class ProductBrandAdmin(TranslationAdmin):
 
 @admin.register(models.DiscountProduct)
 class DiscountProductAdmin(admin.ModelAdmin):
-    list_display = ['image']
+    list_display = ['image', 'product']
 
 
 @admin.register(models.PopularProduct)
 class PopularProductAdmin(TranslationAdmin):
     fieldsets = (
-        ('Banner', {"fields": ('banner',)}),
+        ('Banner', {"fields": ('banner', 'product')}),
         ("Uzbek tilida", {"fields": ("title_uz", "name_uz", "description_uz")}),
         ("Rus tilida", {"fields": ("title_ru", "name_ru", "description_ru")}),
         ("Ingliz tilida", {"fields": ("title_en", "name_en", "description_en")}),

@@ -122,6 +122,7 @@ class ProductMedia(BaseModel):
 
 class DiscountProduct(BaseModel):
     image = models.ImageField(upload_to='product/discount-product')
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.image.name
@@ -136,6 +137,7 @@ class PopularProduct(BaseModel):
     name = models.CharField(max_length=250)
     banner = models.ImageField(upload_to='product/popular-product')
     description = models.TextField()
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name
