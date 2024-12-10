@@ -1,0 +1,5 @@
+services:
+  app:
+    build: .
+    prots:
+      - 8000:10
