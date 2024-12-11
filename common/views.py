@@ -9,14 +9,18 @@ class ContactUsApiView(generics.CreateAPIView):
     queryset = models.ContactUs.objects.all()
 
 
-class AboutUsListApiView(views.APIView):
+class AboutUsListApiView(generics.GenericAPIView):
+    serializer_class = serializers.AboutUsSerializer
+
     def get(self, request):
         queryset = models.AboutUs.objects.all()
         serializer = serializers.AboutUsSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class AdvertisementApiView(views.APIView):
+class AdvertisementApiView(generics.GenericAPIView):
+    serializer_class = serializers.AdvertisingSerializer
+
     def get(self, request):
         queryset = models.Advertisement.objects.all()
         serializer = serializers.AdvertisingSerializer(queryset, many=True)

@@ -7,56 +7,72 @@ from rest_framework.response import Response
 from product import models, serializers, filters, paganation
 
 
-class ProductCategoryListApiView(views.APIView):
+class ProductCategoryListApiView(generics.GenericAPIView):
+    serializer_class = serializers.ProductCategoryListSerializer
+
     def get(self, request):
         queryset = models.ProductCategory.objects.all()
         serializer = serializers.ProductCategoryListSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ProductBrandListApiView(views.APIView):
+class ProductBrandListApiView(generics.GenericAPIView):
+    serializer_class = serializers.ProductBrandListSerializer
+
     def get(self, request):
         brands = models.ProductBrand.objects.all()
         serializer = serializers.ProductBrandListSerializer(brands, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ProductColorListSerializer(views.APIView):
+class ProductColorListSerializer(generics.GenericAPIView):
+    serializer_class = serializers.ProductColorSerializer
+
     def get(self, request):
         colors = models.ProductColor.objects.all()
         serializer = serializers.ProductColorSerializer(colors, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class DiscountedProductListApiView(views.APIView):
+class DiscountedProductListApiView(generics.GenericAPIView):
+    serializer_class = serializers.DiscountedProductSerializer
+
     def get(self, request):
         queryset = models.DiscountProduct.objects.all()
         serializer = serializers.DiscountedProductSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class NewProductListApiView(views.APIView):
+class NewProductListApiView(generics.GenericAPIView):
+    serializer_class = serializers.ProductListSerializer
+
     def get(self, request):
         queryset = models.Product.objects.order_by('-created_at')[:5]
         serializer = serializers.ProductListSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class PopularProductListApiView(views.APIView):
+class PopularProductListApiView(generics.GenericAPIView):
+    serializer_class = serializers.PopularProductListSerializer
+
     def get(self, request):
         queryset = models.PopularProduct.objects.all()
         serializer = serializers.PopularProductListSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class TopProductListApiView(views.APIView):
+class TopProductListApiView(generics.GenericAPIView):
+    serializer_class = serializers.ProductListSerializer
+
     def get(self, request):
         queryset = models.Product.objects.filter(is_top=True)[:5]
         serializer = serializers.ProductListSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class PopularProductApiView(views.APIView):
+class PopularProductApiView(generics.GenericAPIView):
+    serializer_class = serializers.ProductListSerializer
+
     def get(self, request):
         queryset = models.Product.objects.filter(is_popular=True)
         serializer = serializers.ProductListSerializer(queryset, many=True)
@@ -74,7 +90,9 @@ class ProductLByCategoryListApiView(generics.ListAPIView):
         return models.Product.objects.filter(category__id=category_id)
 
 
-class ProductDetailApiView(views.APIView):
+class ProductDetailApiView(generics.GenericAPIView):
+    serializer_class = serializers.ProductDetailSerializer
+
     def get(self, request, product_id):
         try:
             product = models.Product.objects.get(id=product_id)
@@ -84,14 +102,18 @@ class ProductDetailApiView(views.APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class CategoryInfoApiView(views.APIView):
+class CategoryInfoApiView(generics.GenericAPIView):
+    serializer_class = serializers.TecInfoSerializer
+
     def get(self, request, category_id):
         data = models.TechnicalInformation.objects.filter(category__id=category_id)
         serializer = serializers.TecInfoSerializer(data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class SimilarProductListApiView(views.APIView):
+class SimilarProductListApiView(generics.GenericAPIView):
+    serializer_class = serializers.ProductListSerializer
+
     def get(self, request, product_id):
         product = models.Product.objects.filter(id=product_id).first()
         if product is None:
@@ -149,7 +171,7 @@ class SearchApiView(generics.GenericAPIView):
         })
 
 
-class GetMinAndMaxPriceApiView(views.APIView):
+class GetMinAndMaxPriceApiView(generics.GenericAPIView):
     def get(self, request, category_id):
         max_price = models.Product.objects.filter(category__id=category_id).aggregate(
             max_price=Max('price')
