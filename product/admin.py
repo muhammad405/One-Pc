@@ -93,7 +93,7 @@ class ProductColorAdmin(admin.ModelAdmin):
 @admin.register(models.OrderProduct)
 class OrderProductAdmin(admin.ModelAdmin):
     fieldsets = (
-        ('User info', {"fields": ('first_name', 'last_name', 'phone_number', 'user')}),
+        ('User info', {"fields": ('first_name', 'last_name', 'phone_number')}),
         ("Location", {"fields": ("region", "city", "address", 'floor')}),
         ("Order info", {"fields": ("product_count", "total_price", 'comment')}),
         ("Status", {"fields": ("status", "method_for_reception")}),
