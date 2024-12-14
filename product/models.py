@@ -97,8 +97,8 @@ class Product(BaseModel):
     is_discount = models.BooleanField(default=False)
     is_top = models.BooleanField(default=False)
     is_popular = models.BooleanField(default=False)
-    info = models.ManyToManyField(ProductTecInfo, related_name='products')
-    colors = models.ManyToManyField('ProductColor', related_name='products')
+    info = models.ManyToManyField(ProductTecInfo, null=True, blank=True, related_name='products')
+    colors = models.ManyToManyField('ProductColor', null=True, blank=True, related_name='products')
 
     def __str__(self):
         return self.name
