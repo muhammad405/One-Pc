@@ -53,9 +53,9 @@ class ProductAdmin(TranslationAdmin):
 
 @admin.register(models.ProductCategory)
 class ProductCategoryAdmin(TranslationAdmin):
-    list_display = ['name', 'is_top', 'is_popular']
+    list_display = ['name', 'is_popular']
     list_display_links = list_display
-    list_filter = ['is_top', 'is_popular']
+    list_filter = ['is_popular']
 
 
 @admin.register(models.ProductBrand)

@@ -13,7 +13,6 @@ NEW_ORDER, IN_PROCESS, CANCELLED, FINISHED = ('yangi buyurtma', 'jarayonda', 'be
 class ProductCategory(BaseModel):
     icon = models.ImageField(upload_to='product/category/')
     name = models.CharField(max_length=250)
-    is_top = models.BooleanField(default=False)
     is_popular = models.BooleanField(default=False)
 
     def __str__(self):
