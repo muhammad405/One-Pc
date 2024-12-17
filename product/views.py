@@ -65,7 +65,7 @@ class TopProductListApiView(generics.GenericAPIView):
     serializer_class = serializers.ProductListSerializer
 
     def get(self, request):
-        queryset = models.Product.objects.filter(is_top=True)[:5]
+        queryset = models.Product.objects.filter(is_top=True)[:25]
         serializer = serializers.ProductListSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
