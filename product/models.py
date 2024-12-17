@@ -39,7 +39,7 @@ class ProductColor(BaseModel):
     name = models.CharField(max_length=250, null=True)
 
     def __str__(self):
-        return self.name
+        return self.name or self.rgba_name
 
     class Meta:
         verbose_name = _('product color')
