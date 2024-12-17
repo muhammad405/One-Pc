@@ -66,7 +66,7 @@ class ProductBrandAdmin(TranslationAdmin):
 
 @admin.register(models.DiscountProduct)
 class DiscountProductAdmin(admin.ModelAdmin):
-    list_display = ['image', 'product']
+    list_display = ['image_uz', 'product']
 
 
 @admin.register(models.PopularProduct)

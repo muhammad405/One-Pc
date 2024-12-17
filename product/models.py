@@ -121,11 +121,13 @@ class ProductMedia(BaseModel):
 
 
 class DiscountProduct(BaseModel):
-    image = models.ImageField(upload_to='product/discount-product')
+    image_uz = models.ImageField(upload_to='product/discount-product', null=True)
+    image_en = models.ImageField(upload_to='product/discount-product', null=True)
+    image_ru = models.ImageField(upload_to='product/discount-product', null=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return self.image.name
+        return self.image_uz.name
 
     class Meta:
         verbose_name = _('discount product')
