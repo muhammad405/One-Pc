@@ -15,11 +15,10 @@ class BaseModel(models.Model):
 
 
 class Advertisement(models.Model):
-    image = models.ImageField(upload_to='media/common/advertisement')
+    image_en = models.ImageField(upload_to='media/common/advertisement')
+    image_uz = models.ImageField(upload_to='media/common/advertisement')
+    image_ru = models.ImageField(upload_to='media/common/advertisement')
     link = models.URLField()
-
-    def __str__(self):
-        return self.image.name
 
     class Meta:
         verbose_name = 'Advertisement'
