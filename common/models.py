@@ -15,9 +15,9 @@ class BaseModel(models.Model):
 
 
 class Advertisement(models.Model):
-    image_en = models.ImageField(upload_to='media/common/advertisement')
-    image_uz = models.ImageField(upload_to='media/common/advertisement')
-    image_ru = models.ImageField(upload_to='media/common/advertisement')
+    image_en = models.ImageField(upload_to='media/common/advertisement', null=True)
+    image_uz = models.ImageField(upload_to='media/common/advertisement', null=True)
+    image_ru = models.ImageField(upload_to='media/common/advertisement', null=True)
     link = models.URLField()
 
     class Meta:

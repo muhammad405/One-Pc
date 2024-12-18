@@ -20,7 +20,7 @@ class AboutUsAdmin(admin.ModelAdmin):
 
 @admin.register(models.Advertisement)
 class AdvertisementAdmin(admin.ModelAdmin):
-    list_display = ['link', 'image_uz' 'image_ru', 'image_en']
+    list_display = ['link', 'image_uz', 'image_ru', 'image_en']
     list_display_links = list_display
 
 
