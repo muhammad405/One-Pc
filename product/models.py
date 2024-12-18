@@ -126,9 +126,6 @@ class DiscountProduct(BaseModel):
     image_ru = models.ImageField(upload_to='product/discount-product', null=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
 
-    def __str__(self):
-        return self.image_uz.name
-
     class Meta:
         verbose_name = _('discount product')
         verbose_name_plural = _('discount products')
