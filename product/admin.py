@@ -51,6 +51,7 @@ class ProductAdmin(TranslationAdmin):
     inlines = [ProductMediasInline]
     list_display = ['item', 'name_uz', 'name_ru', 'name_en', 'category']
     list_editable = ['name_uz', 'name_ru', 'name_en', 'category']
+    search_fields = ('item',)
 
 
 
