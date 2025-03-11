@@ -122,12 +122,11 @@ USE_I18N = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-BASE_URL = env('BASE_URL')
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
 
-MEDIA_URL = f'/media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
@@ -235,5 +234,3 @@ CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:5173',  # Your frontend address
 ]
 
-SESSION_COOKIE_AGE = 60 * 60 * 24 * 365
-SESSION_SAVE_EVERY_REQUEST = True

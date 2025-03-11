@@ -88,11 +88,13 @@ class ProductTecInfo(BaseModel):
 
 
 class Product(BaseModel):
-    name = models.CharField(max_length=250)
-    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, related_name='products')
-    main_image = models.ImageField(upload_to='product/product/')
-    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE, related_name='products')
+    name = models.CharField(max_length=250, null=True, blank=True)
+    category = models.ForeignKey(ProductCategory, on_delete=models.SET_NULL, related_name='products', null=True, blank=True)
+    main_image = models.ImageField(upload_to='product/product/', null=True, blank=True)
+    brand = models.ForeignKey(ProductBrand, on_delete=models.SET_NULL, related_name='products', null=True, blank=True)
     price = models.PositiveBigIntegerField(default=0)
+    quantity_left = models.PositiveIntegerField(default=0, null=True, blank=True)
+    item = models.CharField(max_length=250, unique=True)
     discount_percentage = models.PositiveIntegerField(default=0)
     is_discount = models.BooleanField(default=False)
     is_top = models.BooleanField(default=False)
@@ -101,7 +103,7 @@ class Product(BaseModel):
     colors = models.ManyToManyField('ProductColor', null=True, blank=True, related_name='products')
 
     def __str__(self):
-        return self.name
+        return self.item
 
     class Meta:
         verbose_name = _('product')

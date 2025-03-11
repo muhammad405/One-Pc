@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.12
 
 WORKDIR /onepc
 
@@ -12,8 +12,4 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 EXPOSE 8000
 
-RUN python manage.py migrate
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
-
-

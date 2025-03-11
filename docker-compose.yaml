@@ -1,0 +1,43 @@
+services:
+  onepc:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+    environment:
+      - DB_NAME=onepc_db
+      - DB_USER=onepc
+      - DB_PASSWORD=onepc
+      - DB_HOST=postgres_db
+      - DB_PORT=5432
+    container_name: onepc 
+    depends_on:
+      - postgres_db
+    networks:
+      - onepc_network
+
+  postgres_db:
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=onepc
+      - POSTGRES_PASSWORD=onepc
+      - POSTGRES_DB=onepc_db
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=postgres_db
+    networks:
+      - onepc_network
+    ports:
+      - 5432:5432
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+networks:
+  onepc_network:
+    driver: bridge
+  
+volumes:
+  postgres_data:

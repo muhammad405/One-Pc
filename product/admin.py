@@ -49,7 +49,7 @@ class ProductAdmin(TranslationAdmin):
         ("Product Name", {"fields": ("name_uz", "name_ru", "name_en")}),
     )
     inlines = [ProductMediasInline]
-    list_display = ['name', 'brand', 'category']
+    list_display = ['item', 'price', 'quantity_left']
 
 
 @admin.register(models.ProductCategory)
