@@ -45,7 +45,7 @@ class TecInfoAdmin(admin.ModelAdmin):
 @admin.register(models.Product)
 class ProductAdmin(TranslationAdmin):
     fieldsets = (
-        ('Product Info', {"fields": ("main_image", 'info', 'colors', "category", "brand", 'price', 'discount_percentage', 'is_top', 'is_discount', 'is_popular')}),
+        ('Product Info', {"fields": ("main_image", 'info', 'colors', "category", "brand", 'price', 'discount_percentage', 'is_top', 'is_discount', 'is_popular', 'item', 'quantity_left',)}),
         ("Product Name", {"fields": ("name_uz", "name_ru", "name_en")}),
     )
     inlines = [ProductMediasInline]
