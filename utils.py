@@ -14,7 +14,7 @@ from openpyxl import load_workbook
 def clean_number(price):
     if price:  
         num = re.sub(r"\D", "", str(price)
-        return int(num) if num else 0  
+        return num if num else 0  
     return 0 
 
 
