@@ -52,7 +52,7 @@ class ProductAdmin(TranslationAdmin):
     list_display = ['item', 'name_uz', 'name_ru', 'name_en', 'category', 'main_image']
     list_editable = ['name_uz', 'name_ru', 'name_en', 'category', 'main_image']
     search_fields = ('item',)
-
+    list_filter = ['category'] 
 
 
 @admin.register(models.ProductCategory)
