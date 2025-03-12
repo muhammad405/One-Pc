@@ -57,9 +57,13 @@ class ProductAdmin(TranslationAdmin):
 
 @admin.register(models.ProductCategory)
 class ProductCategoryAdmin(TranslationAdmin):
-    list_display = ['name', 'is_popular']
+    list_display = ['name', 'is_popular', 'products_count']
     list_display_links = list_display
     list_filter = ['is_popular']
+
+
+    def products_count(self, obj):
+        return obj.products.count()
 
 
 @admin.register(models.ProductBrand)
