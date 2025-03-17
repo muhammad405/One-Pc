@@ -123,14 +123,14 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
     def get_product_medias(self, obj):
         medias = models.ProductMedia.objects.filter(product__id=obj.id)
-        return ProductMediaSerializer(medias, many=True).data
+        return ProductMediaSerializer(medias, many=True).data if medias else None
 
     def get_product_colors(self, obj):
-        return ProductColorSerializer(obj.colors, many=True).data
+        return ProductColorSerializer(obj.colors, many=True).data if obj.colors else None
 
     def get_infos(self, obj):
         product_tec_info = obj.info.all()
-        print(product_tec_info)
+        # print(product_tec_info)
         return ProductTecInfoSerializer(product_tec_info, many=True).data
 
 
