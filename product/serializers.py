@@ -99,8 +99,8 @@ class ProductListSerializer(serializers.ModelSerializer):
 class ProductDetailSerializer(serializers.ModelSerializer):
     category_id = serializers.IntegerField(source='category.id')
     category_name = serializers.CharField(source='category.name')
-    brand_id = serializers.IntegerField(source='brand.id')
-    brand_name = serializers.CharField(source='brand.name')
+    brand_id = serializers.IntegerField(source='brand.id', default=None)
+    brand_name = serializers.CharField(source='brand.name', default=None)
     discount_price = serializers.SerializerMethodField(method_name='get_discount_price')
     medias = serializers.SerializerMethodField(method_name='get_product_medias')
     colors = serializers.SerializerMethodField(method_name='get_product_colors')
