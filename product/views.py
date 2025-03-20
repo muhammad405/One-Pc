@@ -87,7 +87,7 @@ class ProductLByCategoryListApiView(generics.ListAPIView):
 
     def get_queryset(self):
         category_id = self.kwargs.get('category_id')
-        return models.Product.objects.filter(category__id=category_id)
+        return models.Product.objects.filter(category__id=category_id).exclude(main_image='')
 
 
 class ProductDetailApiView(generics.GenericAPIView):
