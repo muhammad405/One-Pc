@@ -47,7 +47,7 @@ class NewProductListApiView(generics.GenericAPIView):
     serializer_class = serializers.ProductListSerializer
 
     def get(self, request):
-        queryset = models.Product.objects.order_by('-created_at').filter(category__id__isnull=False)[:5]
+        queryset = models.Product.objects.order_by('-created_at').filter(category__id__isnull=False).exclude(main_image='')[:5]
         serializer = serializers.ProductListSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -74,7 +74,7 @@ class PopularProductApiView(generics.GenericAPIView):
     serializer_class = serializers.ProductListSerializer
 
     def get(self, request):
-        queryset = models.Product.objects.filter(is_popular=True)
+        queryset = models.Product.objects.filter(is_popular=True).exclude(main_image='')
         serializer = serializers.ProductListSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
