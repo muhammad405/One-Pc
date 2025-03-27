@@ -17,6 +17,7 @@ schema_view = get_schema_view(
       license=openapi.License(name="OnePc License"),
    ),
    public=True,
+   url='https://pc.onepc.uz'
 )
 
 urlpatterns = [
