@@ -229,7 +229,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
-CSRF_TRUSTED_ORIGINS = ['https://pc.repid.uz','http://127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https`://pc.onepc.uz','http://127.0.0.1']
 CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:5173',  # Your frontend address
 ]
