@@ -65,7 +65,7 @@ class TopProductListApiView(generics.GenericAPIView):
     serializer_class = serializers.ProductListSerializer
 
     def get(self, request):
-        queryset = models.Product.objects.filter(is_top=True)[:25]
+        queryset = models.Product.objects.filter(is_top=True).exclude(main_image='')[:25]
         serializer = serializers.ProductListSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -74,7 +74,7 @@ class PopularProductApiView(generics.GenericAPIView):
     serializer_class = serializers.ProductListSerializer
 
     def get(self, request):
-        queryset = models.Product.objects.filter(is_popular=True)
+        queryset = models.Product.objects.filter(is_popular=True).exclude(main_image='')
         serializer = serializers.ProductListSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -87,7 +87,7 @@ class ProductLByCategoryListApiView(generics.ListAPIView):
 
     def get_queryset(self):
         category_id = self.kwargs.get('category_id')
-        return models.Product.objects.filter(category__id=category_id)
+        return models.Product.objects.filter(category__id=category_id).exclude(main_image='')
 
 
 class ProductDetailApiView(generics.GenericAPIView):
@@ -118,7 +118,7 @@ class SimilarProductListApiView(generics.GenericAPIView):
         product = models.Product.objects.filter(id=product_id).first()
         if product is None:
             return Response({"message": 'Product is not found'}, status=status.HTTP_400_BAD_REQUEST)
-        products = models.Product.objects.filter(brand__id=product.brand.id, category__id=product.category.id)[:7]
+        products = models.Product.objects.filter(brand__id=product.brand.id, category__id=product.category.id).exclude(main_image='')[:7]
         serializer = serializers.ProductListSerializer(products, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
