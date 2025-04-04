@@ -20,4 +20,4 @@ class AboutUsSerializer(serializers.ModelSerializer):
 class AdvertisingSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Advertisement
-        fields = ['id', 'image_uz', 'image_ru', 'image_en', 'link']
+        fields = ['id', 'image_uz', 'image_ru', 'image_en', 'mb_image_uz', 'mb_image_ru', 'mb_image_en', 'link']
