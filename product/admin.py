@@ -66,7 +66,7 @@ class ProductCategoryAdmin(TranslationAdmin):
         return obj.products.count()
 
 
-@admin.register(models.ProductBrand)
+# @admin.register(models.ProductBrand)
 class ProductBrandAdmin(TranslationAdmin):
     list_display = ['name']
 
@@ -93,12 +93,12 @@ class ProductTecInfoAdmin(admin.ModelAdmin):
     form = forms.ProductTecInfoForm
 
 
-@admin.register(models.ProductColor)
+# @admin.register(models.ProductColor)
 class ProductColorAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(models.OrderProduct)
+# @admin.register(models.OrderProduct)
 class OrderProductAdmin(admin.ModelAdmin):
     fieldsets = (
         ('User info', {"fields": ('first_name', 'last_name', 'phone_number')}),
@@ -120,6 +120,6 @@ class OrderProductAdmin(admin.ModelAdmin):
         return True
 
 
-@admin.register(models.Region)
+# @admin.register(models.Region)
 class RegionAdmin(TranslationAdmin):
     inlines = [CityInline]
