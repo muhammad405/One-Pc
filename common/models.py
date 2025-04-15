@@ -15,12 +15,12 @@ class BaseModel(models.Model):
 
 
 class Advertisement(models.Model):
-    image_en = models.ImageField(upload_to='media/common/advertisement', null=True)
-    image_uz = models.ImageField(upload_to='media/common/advertisement', null=True)
-    image_ru = models.ImageField(upload_to='media/common/advertisement', null=True)
-    mb_image_en = models.ImageField(upload_to='media/common/advertisement/mb_image', null=True, verbose_name='mobile_image_en')
-    mb_image_uz = models.ImageField(upload_to='media/common/advertisement/mb_image', null=True, verbose_name='mobile_image_uz')
-    mb_image_ru = models.ImageField(upload_to='media/common/advertisement/mb_image', null=True, verbose_name='mobile_image_ru')
+    image_en = models.FileField(upload_to='media/common/advertisement', null=True)
+    image_uz = models.FileField(upload_to='media/common/advertisement', null=True)
+    image_ru = models.FileField(upload_to='media/common/advertisement', null=True)
+    mb_image_en = models.FileField(upload_to='media/common/advertisement/mb_image', null=True, verbose_name='mobile_image_en')
+    mb_image_uz = models.FileField(upload_to='media/common/advertisement/mb_image', null=True, verbose_name='mobile_image_uz')
+    mb_image_ru = models.FileField(upload_to='media/common/advertisement/mb_image', null=True, verbose_name='mobile_image_ru')
     link = models.URLField()
 
     class Meta:
