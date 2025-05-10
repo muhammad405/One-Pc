@@ -123,3 +123,10 @@ class OrderProductAdmin(admin.ModelAdmin):
 # @admin.register(models.Region)
 class RegionAdmin(TranslationAdmin):
     inlines = [CityInline]
+
+
+
+@admin.register(models.ProductBrand)
+class BrandAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    list_display_links = list_display
