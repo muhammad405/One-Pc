@@ -190,9 +190,11 @@ class GetMinAndMaxPriceApiView(generics.GenericAPIView):
 class ProductListByBrandIdApiView(generics.GenericAPIView):
     serializer_class = serializers.ProductListSerializer
     queryset = models.Product.objects.all()
+    pagination_class = paganation.CustomPagination
 
     def get(self, request, brand_id):
         brand = get_object_or_404(models.ProductBrand, id=brand_id)
-        products = models.Product.objects.filter(brand=brand) 
-        serializer = self.serializer_class(products, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        products = models.Product.objects.filter(brand=brand)
+        paginated_products = self.paginate_queryset(products)
+        serializer = self.serializer_class(paginated_products, many=True)
+        return self.get_paginated_response(serializer.data, status=status.HTTP_200_OK)
