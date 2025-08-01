@@ -197,4 +197,4 @@ class ProductListByBrandIdApiView(generics.GenericAPIView):
         products = models.Product.objects.filter(brand=brand)
         paginated_products = self.paginate_queryset(products)
         serializer = self.serializer_class(paginated_products, many=True)
-        return self.get_paginated_response(serializer.data, status=status.HTTP_200_OK)
+        return self.get_paginated_response(serializer.data)
