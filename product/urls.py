@@ -23,7 +23,7 @@ urlpatterns = [
     path('product/popular/list/', views.PopularProductApiView.as_view(), name='popular-product-list'),
     path('product/<int:product_id>/', views.ProductDetailApiView.as_view(), name='product-detail'),
     path('product/similar-products/<int:product_id>/', views.SimilarProductListApiView.as_view(), name='product-detail'),
-    path('product/<int:brand_id>/list/', views.ProductListByBrandIdApiView.as_view())cl,
+    path('product/<int:brand_id>/list/', views.ProductListByBrandIdApiView.as_view()),
     # product order
     path('order/create/', views.OrderCreateApiView.as_view(), name='order-create'),
     path('get-methods/', views.GetOrderMethodForReceptionApiView.as_view(), name='get-methods'),
