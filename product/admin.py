@@ -66,10 +66,6 @@ class ProductCategoryAdmin(TranslationAdmin):
         return obj.products.count()
 
 
-# @admin.register(models.ProductBrand)
-class ProductBrandAdmin(TranslationAdmin):
-    list_display = ['name']
-
 
 @admin.register(models.DiscountProduct)
 class DiscountProductAdmin(admin.ModelAdmin):

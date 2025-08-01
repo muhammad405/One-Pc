@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.db.models import Q, Min, Max
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import serializers, views, status, generics
@@ -185,3 +186,13 @@ class GetMinAndMaxPriceApiView(generics.GenericAPIView):
         }
         return Response(data)
 
+
+class ProductListByBrandIdApiView(generics.GenericAPIView):
+    serializer_class = serializers.ProductListSerializer
+    queryset = models.Product.objects.all()
+
+    def get(self, request, brand_id):
+        brand = get_object_or_404(models.ProductBrand, id=brand_id)
+        products = models.Product.objects.filter(brand=brand) 
+        serializer = self.serializer_class(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
