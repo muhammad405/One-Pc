@@ -3,10 +3,22 @@ from django.db.models import Q, Min, Max
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import serializers, views, status, generics
 from rest_framework.parsers import JSONParser
-from rest_framework.response import Response
-
 from product import models, serializers, filters, paganation
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from product.models import Product
 
+class ProductStatsView(APIView):
+    def get(self, request):
+        products = Product.objects.all()
+        product_count = products.count()
+        product_with_image = products.filter(main_image__isnull=False).exclude(main_image='').count()
+        product_without_image = product_count - product_with_image
+        return Response({
+            'product_count': product_count,
+            'product_with_image': product_with_image,
+            'product_without_image': product_without_image
+        })
 
 class ProductCategoryListApiView(generics.GenericAPIView):
     serializer_class = serializers.ProductCategoryListSerializer

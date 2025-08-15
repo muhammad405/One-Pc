@@ -29,4 +29,5 @@ urlpatterns = [
     path('get-methods/', views.GetOrderMethodForReceptionApiView.as_view(), name='get-methods'),
     # compare products
     path('compare/', views.CompareProductApiView.as_view(), name='compare-products'),
+    path('api/product-stats/', views.ProductStatsView.as_view(), name='product-stats'),
 ]

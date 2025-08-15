@@ -1,46 +1,36 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin, TranslationStackedInline
-
 from product import models, forms
-
 
 class ProductMediasInline(admin.StackedInline):
     model = models.ProductMedia
     extra = 0
     fields = ['media']
 
-
 class TecInfoNameAdmin(admin.StackedInline):
     model = models.TecInfoName
     extra = 0
     fields = ['name']
-
 
 class CityInline(TranslationStackedInline):
     model = models.City
     extra = 0
     fields = ['name']
 
-
 class OrderItemInline(admin.StackedInline):
     model = models.OrderProductItem
     extra = 0
     fields = ['product', 'count']
-
     def has_delete_permission(self, request, obj=None):
         return False
-
     def has_change_permission(self, request, obj=None):
         return False
-
     def has_add_permission(self, request, obj):
         return False
-
 
 @admin.register(models.TechnicalInformation)
 class TecInfoAdmin(admin.ModelAdmin):
     inlines = [TecInfoNameAdmin]
-
 
 @admin.register(models.Product)
 class ProductAdmin(TranslationAdmin):
@@ -52,25 +42,31 @@ class ProductAdmin(TranslationAdmin):
     list_display = ['item', 'name_uz', 'name_ru', 'name_en', 'category', 'main_image']
     list_editable = ['name_uz', 'name_ru', 'name_en', 'category', 'main_image']
     search_fields = ('item', 'name_uz', 'name_ru', 'name_en')
-    list_filter = ['category'] 
+    list_filter = ['category']
+    change_list_template = "admin/custom_changelist.html"  # Shablon qo‘shildi
 
+    def changelist_view(self, request, extra_context=None):
+        products = models.Product.objects.all()
+        product_count = products.count()
+        product_with_image = products.filter(main_image__isnull=False).exclude(main_image='').count()
+        product_without_image = product_count - product_with_image
+        extra_context = extra_context or {}
+        extra_context['product_count'] = product_count
+        extra_context['product_with_image'] = product_with_image
+        extra_context['product_without_image'] = product_without_image
+        return super().changelist_view(request, extra_context=extra_context)
 
 @admin.register(models.ProductCategory)
 class ProductCategoryAdmin(TranslationAdmin):
     list_display = ['name', 'is_popular', 'products_count']
     list_display_links = list_display
     list_filter = ['is_popular']
-
-
     def products_count(self, obj):
         return obj.products.count()
-
-
 
 @admin.register(models.DiscountProduct)
 class DiscountProductAdmin(admin.ModelAdmin):
     list_display = ['id', 'image_uz', 'product']
-
 
 @admin.register(models.PopularProduct)
 class PopularProductAdmin(TranslationAdmin):
@@ -83,44 +79,9 @@ class PopularProductAdmin(TranslationAdmin):
     list_display = ['name', 'title']
     list_display_links = list_display
 
-
 @admin.register(models.ProductTecInfo)
 class ProductTecInfoAdmin(admin.ModelAdmin):
     form = forms.ProductTecInfoForm
-
-
-# @admin.register(models.ProductColor)
-class ProductColorAdmin(admin.ModelAdmin):
-    pass
-
-
-# @admin.register(models.OrderProduct)
-class OrderProductAdmin(admin.ModelAdmin):
-    fieldsets = (
-        ('User info', {"fields": ('first_name', 'last_name', 'phone_number')}),
-        ("Location", {"fields": ("region", "city", "address", 'floor')}),
-        ("Order info", {"fields": ("product_count", "total_price", 'comment')}),
-        ("Status", {"fields": ("status", "method_for_reception")}),
-    )
-    filter_horizontal = ('products',)
-    inlines = [OrderItemInline]
-    # readonly_fields = [
-    #     'region', 'city', 'address', 'floor', 'products', 'product_count', 'total_price',
-    #     'comment', 'first_name', 'last_name', 'phone_number', 'user',
-    # ]
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    def has_add_permission(self, request):
-        return True
-
-
-# @admin.register(models.Region)
-class RegionAdmin(TranslationAdmin):
-    inlines = [CityInline]
-
-
 
 @admin.register(models.ProductBrand)
 class BrandAdmin(admin.ModelAdmin):
