@@ -1,9 +1,23 @@
 {% extends "admin/change_list.html" %}
+
+{% block object-tools %}
+    <div class="object-tools" style="margin-top: 20px;">
+        <ul style="display: flex; align-items: center; gap: 10px;">
+            <li>
+                <a style="padding: 5px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 4px; display: inline-block; padding: 8px 15px; transition: transform 0.2s;" href="{% url 'admin:run-utils' %}" class="addlink" onmousedown="this.style.transform='scale(0.95)';" onmouseup="this.style.transform='scale(1)';">
+                    ▶️ Run utilts.py
+                </a>
+            </li>
+        </ul>
+    </div>
+    {{ block.super }}
+{% endblock %}
+
 {% block content %}
-    <div>
-        <p>Barcha mahsulotlar: {{ product_count }}</p>
-        <p>Rasmi bor: {{ product_with_image }}</p>
-        <p>Rasmi yo‘q: {{ product_without_image }}</p>
+    <div style="margin-bottom: 20px;">
+        <p><b>Barcha mahsulotlar:</b> {{ product_count }}</p>
+        <p><b>Rasmi bor:</b> {{ product_with_image }}</p>
+        <p><b>Rasmi yo‘q:</b> {{ product_without_image }}</p>
     </div>
     {{ block.super }}
 {% endblock %}

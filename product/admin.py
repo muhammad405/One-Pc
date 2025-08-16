@@ -1,6 +1,12 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin, TranslationStackedInline
 from product import models, forms
+import os
+import sys
+import subprocess
+from django.urls import path
+from django.shortcuts import redirect
+from django.contrib import messages
 
 class ProductMediasInline(admin.StackedInline):
     model = models.ProductMedia
@@ -32,6 +38,7 @@ class OrderItemInline(admin.StackedInline):
 class TecInfoAdmin(admin.ModelAdmin):
     inlines = [TecInfoNameAdmin]
 
+
 @admin.register(models.Product)
 class ProductAdmin(TranslationAdmin):
     fieldsets = (
@@ -43,7 +50,7 @@ class ProductAdmin(TranslationAdmin):
     list_editable = ['name_uz', 'name_ru', 'name_en', 'category', 'main_image']
     search_fields = ('item', 'name_uz', 'name_ru', 'name_en')
     list_filter = ['category']
-    change_list_template = "admin/custom_changelist.html"  # Shablon qo‘shildi
+    change_list_template = "admin/custom_changelist.html"
 
     def changelist_view(self, request, extra_context=None):
         products = models.Product.objects.all()
@@ -55,6 +62,32 @@ class ProductAdmin(TranslationAdmin):
         extra_context['product_with_image'] = product_with_image
         extra_context['product_without_image'] = product_without_image
         return super().changelist_view(request, extra_context=extra_context)
+
+    # 🔹 Custom URL qo‘shamiz
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path("run-utils/", self.admin_site.admin_view(self.run_utils), name="run-utils"),
+        ]
+        return custom_urls + urls
+
+    # 🔹 utilts.py ni ishlatadigan view
+    def run_utils(self, request):
+        try:
+            project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            utilts_path = os.path.join(project_root, "utils.py")
+
+            # subprocess orqali ishlatamiz
+            subprocess.run([sys.executable, utilts_path], check=True)
+
+            self.message_user(request, "✅ utils.py muvaffaqiyatli ishga tushdi", messages.SUCCESS)
+        except Exception as e:
+            self.message_user(request, f"❌ Xatolik: {e}", messages.ERROR)
+
+        return redirect("..")
+
+
+
 
 @admin.register(models.ProductCategory)
 class ProductCategoryAdmin(TranslationAdmin):

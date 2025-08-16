@@ -7,6 +7,8 @@ from product import models, serializers, filters, paganation
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from product.models import Product
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import generics
 
 class ProductStatsView(APIView):
     def get(self, request):
@@ -185,6 +187,7 @@ class SearchApiView(generics.GenericAPIView):
 
 
 class GetMinAndMaxPriceApiView(generics.GenericAPIView):
+    @swagger_auto_schema(auto_schema=None)  # Swagger-ga e'tiborsiz qilish
     def get(self, request, category_id):
         max_price = models.Product.objects.filter(category__id=category_id).aggregate(
             max_price=Max('price')
