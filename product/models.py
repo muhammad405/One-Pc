@@ -11,7 +11,7 @@ NEW_ORDER, IN_PROCESS, CANCELLED, FINISHED = ('yangi buyurtma', 'jarayonda', 'be
 
 
 class ProductCategory(BaseModel):
-    icon = models.ImageField(upload_to='product/category/')
+    icon = models.ImageField(upload_to='product/category/', blank=True, null=True)
     name = models.CharField(max_length=250)
     is_popular = models.BooleanField(default=False)
 
@@ -36,7 +36,7 @@ class ProductBrand(BaseModel):
 
 class ProductColor(BaseModel):
     rgba_name = models.CharField(max_length=250)
-    name = models.CharField(max_length=250, null=True)
+    name = models.CharField(max_length=250, null=True, blank=True)
 
     def __str__(self):
         return self.name or self.rgba_name
@@ -48,7 +48,7 @@ class ProductColor(BaseModel):
 
 class TechnicalInformation(BaseModel):
     name = models.CharField(max_length=250)
-    category = models.ManyToManyField(ProductCategory, related_name='tec_infos')
+    category = models.ManyToManyField(ProductCategory, related_name='tec_infos', blank=True)
 
     def __str__(self):
         return self.name
@@ -88,22 +88,29 @@ class ProductTecInfo(BaseModel):
 
 
 class Product(BaseModel):
+    # faqat nom kelsa ham qo‘shiladigan qilib optional qildik
     name = models.CharField(max_length=250, null=True, blank=True)
-    category = models.ForeignKey(ProductCategory, on_delete=models.SET_NULL, related_name='products', null=True, blank=True)
+    category = models.ForeignKey(
+        ProductCategory, on_delete=models.SET_NULL,
+        related_name='products', null=True, blank=True
+    )
     main_image = models.ImageField(upload_to='product/product/', null=True, blank=True)
-    brand = models.ForeignKey(ProductBrand, on_delete=models.SET_NULL, related_name='products', null=True, blank=True)
+    brand = models.ForeignKey(
+        ProductBrand, on_delete=models.SET_NULL,
+        related_name='products', null=True, blank=True
+    )
     price = models.PositiveBigIntegerField(default=0)
     quantity_left = models.PositiveIntegerField(default=0, null=True, blank=True)
-    item = models.CharField(max_length=250, unique=True)
+    item = models.CharField(max_length=250, unique=True)  # 1C kodi
     discount_percentage = models.PositiveIntegerField(default=0)
     is_discount = models.BooleanField(default=False)
     is_top = models.BooleanField(default=False)
     is_popular = models.BooleanField(default=False)
-    info = models.ManyToManyField(ProductTecInfo, null=True, blank=True, related_name='products')
-    colors = models.ManyToManyField('ProductColor', null=True, blank=True, related_name='products')
+    info = models.ManyToManyField(ProductTecInfo, blank=True, related_name='products')
+    colors = models.ManyToManyField('ProductColor', blank=True, related_name='products')
 
     def __str__(self):
-        return self.item
+        return self.name or self.item or "No name"
 
     class Meta:
         verbose_name = _('product')
@@ -115,7 +122,7 @@ class ProductMedia(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_medias')
 
     def __str__(self):
-        return self.media.name
+        return self.media.name if self.media else "No media"
 
     class Meta:
         verbose_name = _('product media')
@@ -123,9 +130,9 @@ class ProductMedia(BaseModel):
 
 
 class DiscountProduct(BaseModel):
-    image_uz = models.ImageField(upload_to='product/discount-product', null=True)
-    image_en = models.ImageField(upload_to='product/discount-product', null=True)
-    image_ru = models.ImageField(upload_to='product/discount-product', null=True)
+    image_uz = models.ImageField(upload_to='product/discount-product', null=True, blank=True)
+    image_en = models.ImageField(upload_to='product/discount-product', null=True, blank=True)
+    image_ru = models.ImageField(upload_to='product/discount-product', null=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
@@ -203,7 +210,16 @@ class OrderProduct(BaseModel):
     city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='order_products')
     address = models.CharField(max_length=250)
     floor = models.CharField(max_length=250)
-    phone_number = models.CharField(max_length=15,validators=[RegexValidator(regex=r"^(?:\+998|998)?[0-9]{9}$",message="Telefon raqami noto'g'ri formatda. To'g'ri format +998901234567 bo'lishi kerak.",code='invalid_phone_number')])
+    phone_number = models.CharField(
+        max_length=15,
+        validators=[
+            RegexValidator(
+                regex=r"^(?:\+998|998)?[0-9]{9}$",
+                message="Telefon raqami noto'g'ri formatda. To'g'ri format +998901234567 bo'lishi kerak.",
+                code='invalid_phone_number'
+            )
+        ]
+    )
     comment = models.TextField(null=True, blank=True)
     products = models.ManyToManyField(Product, related_name='order_products', through=OrderProductItem)
     product_count = models.PositiveIntegerField(default=0)

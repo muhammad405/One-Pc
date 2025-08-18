@@ -72,11 +72,12 @@ def load_products_from_1c():
     success_count = 0
     for product in data["data"]:
         try:
-            item = product.get("Товар")
+            item = product.get("Товар")   # 1C kodi
+            name = product.get("Наименование")  # agar yuborilsa
             price = product.get("Цена")
             remainder = product.get("Остатка")
 
-            if not item:  # Bo‘sh yoki None bo‘lsa DBga yozilmasin
+            if not item:
                 print(f"⚠️ Item yo‘q, tashlab ketildi: {product}")
                 continue
 
@@ -86,12 +87,13 @@ def load_products_from_1c():
             obj, created = models.Product.objects.update_or_create(
                 item=item,
                 defaults={
+                    "name": name or item,  # agar ism kelmasa ham itemni yozamiz
                     "price": clean_price,
                     "quantity_left": max(0, quantity_left)
                 }
             )
 
-            print(f"{'CREATED' if created else 'UPDATED'}: {obj.item} | Price: {obj.price} | Qty: {obj.quantity_left}")
+            print(f"{'CREATED' if created else 'UPDATED'}: {obj.item} | Name: {obj.name} | Price: {obj.price} | Qty: {obj.quantity_left}")
             success_count += 1
 
         except Exception as e:
