@@ -4,7 +4,6 @@ import re
 import requests
 import json
 from openpyxl import load_workbook
-from django.utils.crypto import get_random_string
 
 # Django init
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
@@ -33,6 +32,11 @@ def load_products_from_1c():
 
     article_list = [row[1] for row in sheet.iter_rows(min_row=2, max_col=2, values_only=True) if row[1]]
     print(f"📌 Jami artikllar soni: {len(article_list)}")
+    print("📌 Excel dan o'qilgan artikullar (10 ta namuna):", article_list[:10])
+
+    if not article_list:
+        print("❌ Excel faylda artikullar topilmadi.")
+        return
 
     # 1C serveriga POST so'rov yuborish
     url = 'http://195.158.30.91/ONECOMPUTERS/hs/item/getdata'
@@ -65,18 +69,19 @@ def load_products_from_1c():
         print(f"❌ JSON tarkibida 'data' yo‘q: {data}")
         return
 
+    print("📌 1C serveridan kelgan data (10 ta namuna):", data["data"][:10])
+
     success_count = 0
     for product in data["data"]:
         try:
-            item = product.get("Товар")
-            name = product.get("Наименование")
-            price = product.get("Цена")
-            remainder = product.get("Остатка")
+            item = product.get("Товар") or product.get("item")
+            name = product.get("Наименование") or product.get("name")
+            price = product.get("Цена") or product.get("price")
+            remainder = product.get("Остатка") or product.get("quantity_left")
 
-            # Agar item bo‘sh bo‘lsa, avtomatik generatsiya qilamiz
             if not item:
-                item = f"1C-NEW-{get_random_string(6).upper()}"
-                print(f"⚠️ Bo‘sh item topildi, generatsiya qilindi: {item}")
+                print(f"⚠️ Item yo‘q, tashlab ketildi: {product}")
+                continue
 
             clean_price = clean_number(price) if price else 0
             quantity_left = int(remainder) if remainder else 0
@@ -85,7 +90,7 @@ def load_products_from_1c():
             obj, created = models.Product.objects.update_or_create(
                 item=item,
                 defaults={
-                    "name": name or f"Product {item}",
+                    "name": name or item,
                     "price": clean_price,
                     "quantity_left": max(0, quantity_left)
                 }
@@ -97,7 +102,7 @@ def load_products_from_1c():
         except Exception as e:
             print(f"❌ Bitta productni saqlashda xato: {e} | Ma'lumot: {product}")
 
-    print(f"✅ {success_count} ta mahsulot muvaffaqiyatli yangilandi yoki qo‘shildi.")
+    print(f"✅ {success_count} ta mahsulot muvaffaqiyatli yangilandi.")
 
 
 if __name__ == "__main__":
