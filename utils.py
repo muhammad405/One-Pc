@@ -11,31 +11,29 @@ django.setup()
 
 from product import models
 
-
 def clean_number(price):
+    """Price ni integer ga aylantirish"""
     if price:
         num = re.sub(r"\D", "", str(price))
         return int(num) if num else 0
     return 0
 
-
 def load_products_from_1c():
-    file_path = "WEB SAYT.xlsx"
+    """1C dan ma'lumot olib Product modelga saqlash"""
+    file_path = "/app/WEB SAYT.xlsx"
 
     if not os.path.exists(file_path):
         print(f"❌ Fayl topilmadi: {file_path}")
         return
 
+    # Excel fayldan artikullarni o'qish
     wb = load_workbook(file_path)
     sheet = wb.active
 
-    article_list = []
-    for row in sheet.iter_rows(min_row=2, max_col=2, values_only=True):
-        if row[1]:
-            article_list.append(row[1])
-
+    article_list = [row[1] for row in sheet.iter_rows(min_row=2, max_col=2, values_only=True) if row[1]]
     print(f"📌 Jami artikllar soni: {len(article_list)}")
 
+    # 1C serveriga POST so'rov yuborish
     url = 'http://195.158.30.91/ONECOMPUTERS/hs/item/getdata'
     headers = {'Content-Type': 'application/json'}
     payload = {"sap_codes": article_list}
@@ -52,11 +50,8 @@ def load_products_from_1c():
         print(f"❌ 1C serveriga so‘rov yuborishda xato: {e}")
         return
 
-    print("📡 Status code:", response.status_code)
-    print("📡 Javob matni (birinchi 500 belgi):", response.text[:500])
-
     if response.status_code != 200:
-        print("❌ Serverdan noto‘g‘ri javob keldi")
+        print(f"❌ Serverdan noto‘g‘ri javob keldi: {response.status_code}")
         return
 
     try:
@@ -66,14 +61,14 @@ def load_products_from_1c():
         return
 
     if "data" not in data:
-        print("❌ JSON tarkibida 'data' yo‘q:", data)
+        print(f"❌ JSON tarkibida 'data' yo‘q: {data}")
         return
 
     success_count = 0
     for product in data["data"]:
         try:
-            item = product.get("Товар")   # 1C kodi
-            name = product.get("Наименование")  # agar yuborilsa
+            item = product.get("Товар")
+            name = product.get("Наименование")
             price = product.get("Цена")
             remainder = product.get("Остатка")
 
@@ -84,10 +79,11 @@ def load_products_from_1c():
             clean_price = clean_number(price) if price else 0
             quantity_left = int(remainder) if remainder else 0
 
+            # Product ni yangilash yoki yaratish
             obj, created = models.Product.objects.update_or_create(
                 item=item,
                 defaults={
-                    "name": name or item,  # agar ism kelmasa ham itemni yozamiz
+                    "name": name or item,
                     "price": clean_price,
                     "quantity_left": max(0, quantity_left)
                 }
