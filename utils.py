@@ -4,6 +4,7 @@ import re
 import requests
 import json
 from openpyxl import load_workbook
+from django.utils.crypto import get_random_string
 
 # Django init
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
@@ -72,9 +73,10 @@ def load_products_from_1c():
             price = product.get("Цена")
             remainder = product.get("Остатка")
 
+            # Agar item bo‘sh bo‘lsa, avtomatik generatsiya qilamiz
             if not item:
-                print(f"⚠️ Item yo‘q, tashlab ketildi: {product}")
-                continue
+                item = f"1C-NEW-{get_random_string(6).upper()}"
+                print(f"⚠️ Bo‘sh item topildi, generatsiya qilindi: {item}")
 
             clean_price = clean_number(price) if price else 0
             quantity_left = int(remainder) if remainder else 0
@@ -83,7 +85,7 @@ def load_products_from_1c():
             obj, created = models.Product.objects.update_or_create(
                 item=item,
                 defaults={
-                    "name": name or item,
+                    "name": name or f"Product {item}",
                     "price": clean_price,
                     "quantity_left": max(0, quantity_left)
                 }
@@ -95,7 +97,7 @@ def load_products_from_1c():
         except Exception as e:
             print(f"❌ Bitta productni saqlashda xato: {e} | Ma'lumot: {product}")
 
-    print(f"✅ {success_count} ta mahsulot muvaffaqiyatli yangilandi.")
+    print(f"✅ {success_count} ta mahsulot muvaffaqiyatli yangilandi yoki qo‘shildi.")
 
 
 if __name__ == "__main__":
